@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<title>Admin</title>
+
+<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+
+<style type="text/css">
+	
+
+	.login-logo, .form-container {
+	  margin: 0 auto;
+	  max-width: 25em;
+	  -webkit-transition: all .5s ease-in-out;
+	  transition: all .5s ease-in-out;
+	}
+
+
+	.form-container {
+	  margin-top: 11%;
+	  background: white;
+	  padding: 1.5em;
+	  border-radius: 1em;
+	  box-shadow: 0px 0px 1em #ddd;
+	}
+	.form-container h2 {
+	  margin-top: 0;
+	  color: #008CBA;
+	}
+	.form-container .error {
+	  color: red;
+	  margin: .5em 0;
+	}
+	.form-container label span {
+	  color: #d9534f;
+	}
+	.form-container button {
+	  background: #008CBA;
+	}
+	.form-container button:hover {
+	  background: #0079a1;
+	}
+	html {
+	  box-sizing: border-box;
+	}
+
+	*, :before, :after {
+	  box-sizing: inherit;
+	}
+
+	body {
+	  background: #eee;
+	  margin: 1em;
+	  font-family: 'Open Sans', sans-serif;
+	}
+</style>
+
+
+</head>
+<body>
+<div class="container">
+	
+  
+  <div class="form-container off-canvas">
+
+    <form role="form" action="" method="post" class="form-signin" id="contact_form">
+      <h2>Please sign in...</h2>
+
+      <div class="form-group">
+        <label for="EmployeeID"><span>*</span> Employee ID</label>
+        <input type="text" class="form-control" name="EmployeeID" id="EmailAddress" aria-required="true" aria-invalid="true" autofocus required >
+      </div>
+
+      <div class="form-group">
+        <label for="password" id="lpass"><span>*</span> Password</label>
+        <!-- <input type="password" class="form-control" name="password" id="password" aria-required="true" aria-invalid="true" required minlength="8" pattern="[A-Za-z]{1,7}\d{1,7}"> -->
+
+        <input type="password" class="form-control" name="password" id="password" aria-required="true" aria-invalid="true" required >
+      </div>
+
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" id="admintoggle" value="remember-me"> Not an Admin?
+        </label>
+      </div>
+
+      <a class="btn btn-lg btn-primary btn-block" id="submit" name="submit">Sign in</a>
+
+    </form>
+  </div> <!-- /container -->
+  
+</div>
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+<script type="text/javascript">
+var waitingDialog = waitingDialog || (function ($) {
+    'use strict';
+
+  // Creating modal dialog's DOM
+  var $dialog = $(
+    '<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
+    '<div class="modal-dialog modal-m">' +
+    '<div class="modal-content">' +
+      '<div class="modal-header"><h3 style="margin:0;"></h3></div>' +
+      '<div class="modal-body">' +
+        '<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+      '</div>' +
+    '</div></div></div>');
+
+  return {
+    /**
+     * Opens our dialog
+     * @param message Custom message
+     * @param options Custom options:
+     *          options.dialogSize - bootstrap postfix for dialog size, e.g. "sm", "m";
+     *          options.progressType - bootstrap postfix for progress bar type, e.g. "success", "warning".
+     */
+    show: function (message, options) {
+      // Assigning defaults
+      if (typeof options === 'undefined') {
+        options = {};
+      }
+      if (typeof message === 'undefined') {
+        message = 'Loading';
+      }
+      var settings = $.extend({
+        dialogSize: 'm',
+        progressType: '',
+        onHide: null // This callback runs after the dialog was hidden
+      }, options);
+
+      // Configuring dialog
+      $dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
+      $dialog.find('.progress-bar').attr('class', 'progress-bar');
+      if (settings.progressType) {
+        $dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
+      }
+      $dialog.find('h3').text(message);
+      // Adding callbacks
+      if (typeof settings.onHide === 'function') {
+        $dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+          settings.onHide.call($dialog);
+        });
+      }
+      // Opening dialog
+      $dialog.modal();
+    },
+    /**
+     * Closes dialog
+     */
+    hide: function () {
+      $dialog.modal('hide');
+    }
+  };
+})(jQuery);
+
+	var NotAdminFlag = false;
+	$('#admintoggle').on("change" , function () {
+
+  	  	console.log("Switch");
+	  	if($('#admintoggle').is(':checked')){
+	  		document.getElementById('password').style.display = 'none';
+	  		document.getElementById('lpass').style.display = 'none';
+	  		NotAdminFlag  = true;
+		}
+	    else{
+	  		document.getElementById('password').style.display = 'block';
+	  		document.getElementById('lpass').style.display = 'block';
+	    	NotAdminFlag = false;
+	    }
+
+	});
+
+	$("#submit").on("click" , function(){
+		if (!NotAdminFlag) {
+		var email = document.getElementById('EmailAddress');
+		var password = document.getElementById('password');
+		
+		console.log("Clicked...."+ email.value + password.value);
+
+	 var getFromDb="v1/index.php?table=Validate&Flight="+password.value;
+	   var Obj;
+	   xmlhttp = new XMLHttpRequest();
+
+	 
+	  var Validate;
+	  xmlhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	      // console.log(this.responseText);
+	      Validate = JSON.parse(this.responseText);
+	      var flag = false;
+		  if (Validate.length == 0) {
+		  		waitingDialog.hide();
+				document.getElementById('password').style.border = "2px solid red";
+				document.getElementById('EmailAddress').style.border = "2px solid red";
+				
+				document.getElementById('password').style.color = "red";
+				document.getElementById('EmailAddress').style.color = "red";
+			
+		  }
+		  else{
+			   for (var i = 0; i < Validate.length; i++) {
+			   	console.log("IN" + Validate[i].id + email.value);
+				if (Validate[i].id == email.value ) {
+					location.href = "index1.html";
+					flag = true;
+					waitingDialog.hide();
+					break;
+				}
+				}
+
+				waitingDialog.hide();
+				document.getElementById('password').style.border = "2px solid red";
+				document.getElementById('EmailAddress').style.border = "2px solid red";
+				
+				document.getElementById('password').style.color = "red";
+				document.getElementById('EmailAddress').style.color = "red";	
+			
+
+		   }
+	   	   
+	    }
+	  };
+	   xmlhttp.open("GET", getFromDb, true);
+
+	   xmlhttp.send();
+   	   waitingDialog.show('Authenticating...');
+
+	   }
+	   else{
+	   	console.log("helo");
+		var email = document.getElementById('EmailAddress');
+
+			location.href = "index2.html?Emp="+email.value;
+		}
+		
+	});
+
+	// var $loginForm = $(".form-signin"),
+	//   $login_text_fields = $loginForm.find("input[type='text']");
+
+	// $(".login-logo,.form-container").removeClass("off-canvas");
+
+	
+	// function _form_success_aria(label) {
+	//   var target = label.parent().find("input");
+	//   target.attr("aria-invalid", "false");
+	// }
+
+	// function _form_error_aria(validator) {
+	//   console.log(validator.target.elements[0]);
+	// }
+
+</script>
+
+</body>
+</html>
